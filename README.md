@@ -30,3 +30,9 @@ Unauthenticated API calls are rate-limited to 60/hour; export `GITHUB_TOKEN` if 
 
 Settings > Pages > Source: **GitHub Actions**. GitHub Pages on a *private* repo needs a
 paid plan (Pro/Team/Enterprise); on the free plan the repo must be public.
+
+## Placeholder
+
+The root `index.html` is a stand-in shown only until the first workflow deploy. The real
+site (including its own `index.html`) is generated into `dist/` by `build.py` and
+replaces it, so Pages must use the **GitHub Actions** source, not "Deploy from a branch".
