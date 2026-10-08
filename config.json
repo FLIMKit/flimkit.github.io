@@ -1,0 +1,7 @@
+{
+  "org": "FLIMKit",
+  "core": "FLIMKit",
+  "topic": "flimkit-plugin",
+  "exclude": [".github", "flimkit.github.io", "flimkit-plugin-template"],
+  "tagline": "Open-source FLIM analysis: reconvolution fitting, lifetime distributions and phasor analysis, extended by plugins."
+}

@@ -1,0 +1,51 @@
+name: pages
+
+# Rebuilds the site from the public wikis of every FLIMKit plugin repo.
+# A plugin's wiki edit does not trigger this repo, so the hourly schedule is
+# what keeps the site fresh. Plugins can also ping it for an instant refresh:
+#   gh api repos/FLIMKit/flimkit.github.io/dispatches -f event_type=wiki-updated
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [wiki-updated]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install markdown
+      - name: Build site
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python build.py --out dist
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
